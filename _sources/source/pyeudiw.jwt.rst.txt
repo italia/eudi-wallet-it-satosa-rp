@@ -1,0 +1,45 @@
+pyeudiw.jwt package
+===================
+
+Submodules
+----------
+
+pyeudiw.jwt.exceptions module
+-----------------------------
+
+.. automodule:: pyeudiw.jwt.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyeudiw.jwt.parse module
+------------------------
+
+.. automodule:: pyeudiw.jwt.parse
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyeudiw.jwt.utils module
+------------------------
+
+.. automodule:: pyeudiw.jwt.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyeudiw.jwt.verification module
+-------------------------------
+
+.. automodule:: pyeudiw.jwt.verification
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyeudiw.jwt
+   :members:
+   :undoc-members:
+   :show-inheritance:

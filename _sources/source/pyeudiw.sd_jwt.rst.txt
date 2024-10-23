@@ -1,0 +1,37 @@
+pyeudiw.sd\_jwt package
+=======================
+
+Submodules
+----------
+
+pyeudiw.sd\_jwt.exceptions module
+---------------------------------
+
+.. automodule:: pyeudiw.sd_jwt.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyeudiw.sd\_jwt.schema module
+-----------------------------
+
+.. automodule:: pyeudiw.sd_jwt.schema
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyeudiw.sd\_jwt.sd\_jwt module
+------------------------------
+
+.. automodule:: pyeudiw.sd_jwt.sd_jwt
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyeudiw.sd_jwt
+   :members:
+   :undoc-members:
+   :show-inheritance:

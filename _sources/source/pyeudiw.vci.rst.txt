@@ -1,0 +1,37 @@
+pyeudiw.vci package
+===================
+
+Submodules
+----------
+
+pyeudiw.vci.exception module
+----------------------------
+
+.. automodule:: pyeudiw.vci.exception
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyeudiw.vci.jwks\_provider module
+---------------------------------
+
+.. automodule:: pyeudiw.vci.jwks_provider
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyeudiw.vci.utils module
+------------------------
+
+.. automodule:: pyeudiw.vci.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyeudiw.vci
+   :members:
+   :undoc-members:
+   :show-inheritance:
