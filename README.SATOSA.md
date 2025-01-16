@@ -185,6 +185,14 @@ For more deatils on available trust implementations and their configurations, se
 Configure an httpd fronted such NginX, an example is available within the `uwsgi_setup` folder of [Satosa-Saml2Spid](https://github.com/italia/Satosa-Saml2Spid/tree/master/example/uwsgi_setup) 
 remember to customize and add any additional parameter to your preferred httpd configuration.
 
+### Environment Variables for Key Configuration
+
+The following environment variables can be used to configure the `metadata_jwks` and `federation_jwks` dynamically. These variables accept JSON-formatted strings representing the keys.
+
+| Environment Variable      | Description                                                                                                 | Example Value                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PYEUDIW_METADATA_JWKS`   | Contains the private JSON Web Keys (JWK) used for metadata. Each key must be represented as a JSON object.  | `[{"kty":"EC", "crv":"P-256", "x":"TSO-KOqdnUj5SUuasdlRB2VVFSqtJOxuR5GftUTuBdk", "y":"ByWgQt1wGBSnF56jQqLdoO1xKUynMY-BHIDB3eXlR7", "d":"KzQBowMMoPmSZe7G8QsdEWc1IvR2nsgE8qTOYmMcLtc", "use":"sig", "kid":"dDwPWXz5sCtczj7CJbqgPGJ2qQ83gZ9Sfs-tJyULi6s"}]`                                                                                                                                                                 |
+| `PYEUDIW_FEDERATION_JWKS` | Contains the public JSON Web Keys (JWK) used for federation. Each key must be represented as a JSON object. | `[{"kty":"RSA", "n":"utqtxbs-jnK0cPsV7aRkkZKA9t4S-WSZa3nCZtYIKDpgLnR_qcpeF0diJZvKOqXmj2cXaKFUE-8uHKAHo7BL7T-Rj2x3vGESh7SG1pE0thDGlXj4yNsg0qNvCXtk703L2H3i1UXwx6nq1uFxD2EcOE4a6qDYBI16Zl71TUZktJwmOejoHl16CPWqDLGo9GUSk_MmHOV20m4wXWkB4qbvpWVY8H6b2a0rB1B1YPOs5ZLYarSYZgjDEg6DMtZ4NgiwZ-4N1aaLwyO-GLwt9Vf-NBKwoxeRyD3zWE2FXRFBbhKGksMrCGnFDsNl5JTlPja", "e":"AQAB", "kid":"9Cquk0X-fNPSdePQIgQcQZtD6J0IjIRrFigW2PPK_-w"}]` |
 
 ## Environment Variables Configuration
 SATOSA supports the following environment variables to customize its behavior:
