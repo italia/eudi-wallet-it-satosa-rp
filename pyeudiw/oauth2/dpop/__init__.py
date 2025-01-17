@@ -45,7 +45,14 @@ class DPoPIssuer:
 
     @property
     def proof(self):
-        """Returns the proof."""
+        """
+        Generates and returns the DPoP proof.
+
+        :returns: The DPoP proof as a JWT.
+        :rtype: str
+        """
+        
+        # Define the payload for the DPoP proof
         data = {
             "jti": str(uuid.uuid4()),
             "htm": "GET",
@@ -58,7 +65,8 @@ class DPoPIssuer:
             protected={
                 'typ': "dpop+jwt",
                 'jwk': self.private_jwk.serialize()
-            }
+            },
+            kid_in_header=False
         )
         return jwt
 

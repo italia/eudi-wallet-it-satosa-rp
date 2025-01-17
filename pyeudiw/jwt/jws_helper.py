@@ -251,9 +251,14 @@ class JWSHelper(JWHelperInterface):
         # case 2: the token is self contained, and the verification key matches one of the key in the whitelist
         if (self_contained_claims_key_pair := find_self_contained_key(header)):
             # check if the self contained key matches a trusted jwk
-            candidate_key = self_contained_claims_key_pair[0]
-            if (verifying_key := find_jwk_by_thumbprint(available_keys, candidate_key.thumbprint)):
-                return verifying_key
+            used_claims, candidate_key = self_contained_claims_key_pair
+            if hasattr(candidate_key, "thumbprint"):
+                if (verifying_key := find_jwk_by_thumbprint(available_keys, candidate_key.thumbprint)):
+                    return verifying_key
+                else:
+                    logger.error(f"Candidate key {candidate_key} does not have a thumbprint attribute.")
+                    raise ValueError("Invalid key: missing thumbprint.")
+
 
         # case 3: if only one key and there is no header claim that can identitfy any key, than that MUST
         # be the only valid CANDIDATE key for signature verification
