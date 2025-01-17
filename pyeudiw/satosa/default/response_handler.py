@@ -10,11 +10,11 @@ from satosa.context import Context
 from satosa.internal import AuthenticationInformation, InternalData
 from satosa.response import Redirect
 
-from pyeudiw.jwk import JWK
-from pyeudiw.openid4vp.authorization_response import AuthorizeResponseDirectPost, AuthorizeResponsePayload
-from pyeudiw.openid4vp.exceptions import InvalidVPKeyBinding, InvalidVPToken, KIDNotFound
-from pyeudiw.openid4vp.interface import VpTokenParser, VpTokenVerifier
+from pyeudiw.openid4vp.authorization_response import AuthorizeResponsePayload, DirectPostJwtJweParser, DirectPostParser, DirectPostJwtJweParser, detect_response_mode
+from pyeudiw.openid4vp.exceptions import AuthRespParsingException, AuthRespValidationException, InvalidVPKeyBinding, InvalidVPToken, KIDNotFound
+from pyeudiw.openid4vp.interface import VpTokenParser, VpTokenVerifier, AuthorizationResponseParser
 from pyeudiw.openid4vp.schemas.flow import RemoteFlowType
+from pyeudiw.openid4vp.schemas.response import ResponseMode
 from pyeudiw.openid4vp.vp import Vp
 from pyeudiw.openid4vp.vp_sd_jwt_vc import VpVcSdJwtParserVerifier
 from pyeudiw.openid4vp.vp_sd_jwt import VpSdJwt
@@ -141,25 +141,13 @@ class ResponseHandler(ResponseHandlerInterface, BackendTrust):
     def response_endpoint(self, context: Context, *args: tuple) -> Redirect | JsonResponse:
         self._log_function_debug("response_endpoint", context, "args", args)
 
-        request_dict = {}
+        # parse and eventually decrypt jwt in response
         try:
-            request_dict = self._parse_http_request(context)
-        except BadRequestError as e:
-            return self._handle_400(context, e.args[0], e)
-
-        # parse and decrypt jwt in response
-        authz_response: None | AuthorizeResponseDirectPost = None
-        authz_payload: None | AuthorizeResponsePayload = None
-        try:
-            authz_response = AuthorizeResponseDirectPost(**request_dict)
-        except Exception as e:
-            return self._handle_400(context, "response error: invalid schema or missing jwt", e)
-        try:
-            authz_payload = authz_response.decode_payload(self.metadata_jwks_by_kids)
-        except Exception as e:
-            _msg = f"authorization response parsing and/or validation error: {e}"
-            self._log_error(context, _msg)
-            return self._handle_400(context, _msg, HTTPError(f"error: {e}, with request: {request_dict}"))
+            authz_payload: AuthorizeResponsePayload = self._parse_authorization_response(context)
+        except AuthRespParsingException as e400:
+            self._handle_400(context, e400.args[0], e400.args[1])
+        except AuthRespValidationException as e401:
+            self._handle_401(context, "invalid authentication method: token might be invalid or expired", e401)
         self._log_debug(context, f"response URI endpoint response with payload {authz_payload}")
 
         request_session: dict = {}
@@ -316,6 +304,21 @@ class ResponseHandler(ResponseHandlerInterface, BackendTrust):
         )
         internal_resp.subject_id = sub
         return internal_resp
+
+    def _parse_authorization_response(self, context: Context) -> AuthorizeResponsePayload:
+        response_mode = detect_response_mode(context)
+        match response_mode:
+            case ResponseMode.direct_post:
+                parser = DirectPostParser()
+                return parser.parse_and_validate(context)
+            case ResponseMode.direct_post_jwt:
+                parser = DirectPostJwtJweParser(self.config["metadata_jwks"])
+                return parser.parse_and_validate(context)
+            case _:
+                raise AuthRespParsingException(
+                    f"invalid or unrecognized response mode: {response_mode}",
+                    Exception("invalid program state")
+                )
 
     def _vp_verifier_factory(self, presentation_submission: dict, token: str, session_data: dict) -> tuple[VpTokenParser, VpTokenVerifier]:
         # TODO: la funzione dovrebbe consumare la presentation submission per sapere quale token
